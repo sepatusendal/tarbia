@@ -1,0 +1,128 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  PENGURUS
+  ANGGOTA
+}
+
+enum AttendanceStatus {
+  HADIR
+  IZIN
+  SAKIT
+  ALFA
+}
+
+enum PetugasRole {
+  MC
+  PEMATERI
+  NOTULEN
+  DOKUMENTASI
+  KONSUMSI
+}
+
+enum TransactionType {
+  PEMASUKAN
+  PENGELUARAN
+}
+
+model Member {
+  id          String   @id @default(cuid())
+  nama        String
+  nomorHp     String   @unique
+  angkatan    String?
+  statusAktif Boolean  @default(true)
+  role        Role     @default(ANGGOTA)
+  password    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  attendances  Attendance[]
+  petugas      Petugas[]
+  transactions Transaction[] @relation("RecordedBy")
+
+  @@map("members")
+}
+
+model Meeting {
+  id        String   @id @default(cuid())
+  tanggal   DateTime
+  jam       String
+  lokasi    String
+  tema      String
+  catatan   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  petugas     Petugas[]
+  attendances Attendance[]
+  materi      Materi?
+
+  @@map("meetings")
+}
+
+model Petugas {
+  id        String      @id @default(cuid())
+  meetingId String
+  memberId  String
+  role      PetugasRole
+
+  meeting Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  member  Member  @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([meetingId, role, memberId])
+  @@map("petugas")
+}
+
+model Attendance {
+  id        String           @id @default(cuid())
+  meetingId String
+  memberId  String
+  status    AttendanceStatus
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  meeting Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  member  Member  @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([meetingId, memberId])
+  @@map("attendances")
+}
+
+model Transaction {
+  id           String          @id @default(cuid())
+  type         TransactionType
+  kategori     String
+  jumlah       Int
+  keterangan   String?
+  tanggal      DateTime        @default(now())
+  recordedById String
+  createdAt    DateTime        @default(now())
+
+  recordedBy Member @relation("RecordedBy", fields: [recordedById], references: [id])
+
+  @@map("transactions")
+}
+
+model Materi {
+  id        String   @id @default(cuid())
+  meetingId String   @unique
+  judul     String
+  ringkasan String?
+  fileUrl   String?
+  videoUrl  String?
+  catatan   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  meeting Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+
+  @@map("materi")
+}
