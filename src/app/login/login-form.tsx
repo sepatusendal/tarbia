@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { useEffect, useState, useTransition } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
@@ -25,13 +25,27 @@ const loginSchema = z.object({
 
 type LoginValues = z.infer<typeof loginSchema>
 
+// The `!` (important) overrides are needed because Input/Button are shared
+// with the rest of the app and ship their own `dark:` classes for the app's
+// theme — this login screen is a fixed light/warm glass treatment that must
+// win regardless of the visitor's system/app theme preference.
 const inputClassName =
-  "h-12 rounded-2xl border-black/10 bg-white/70 pl-11 pr-4 text-[15px] shadow-sm placeholder:text-black/35 focus-visible:border-black/20 focus-visible:bg-white focus-visible:ring-4 focus-visible:ring-black/5"
+  "h-11 sm:h-12 rounded-2xl !border-black/10 !bg-white/70 pl-11 pr-4 text-[15px] !text-black shadow-sm placeholder:!text-black/35 focus-visible:!border-[#4B5320]/40 focus-visible:!bg-white focus-visible:!ring-4 focus-visible:!ring-[#4B5320]/10"
 
 export function LoginForm() {
   const [isPending, startTransition] = useTransition()
   const [formError, setFormError] = useState<string | null>(null)
   const [showPassword, setShowPassword] = useState(false)
+  const [isHydrated, setIsHydrated] = useState(false)
+
+  // The form posts to a server action, which requires JS to have attached
+  // the submit handler. On a slow connection, tapping submit before that
+  // happens falls back to a native form submit that just reloads the page
+  // with no error shown. Disabling until hydrated prevents that dead end.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional mount-flag guard, not state sync
+    setIsHydrated(true)
+  }, [])
 
   const form = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
@@ -50,7 +64,7 @@ export function LoginForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-3 sm:gap-4">
         <FormField
           control={form.control}
           name="nomorHp"
@@ -111,11 +125,11 @@ export function LoginForm() {
         )}
         <Button
           type="submit"
-          disabled={isPending}
-          className="group h-12 w-full rounded-2xl bg-black text-[15px] font-medium text-white shadow-lg transition-all hover:-translate-y-0.5 hover:bg-black hover:shadow-xl"
+          disabled={isPending || !isHydrated}
+          className="group h-11 sm:h-12 w-full rounded-2xl !bg-[#4B5320] text-[15px] font-medium !text-white shadow-lg transition-all hover:-translate-y-0.5 hover:!bg-[#5C6B2E] hover:shadow-xl hover:shadow-[#4B5320]/20 disabled:opacity-60"
         >
-          {isPending ? "Masuk..." : "Masuk"}
-          {!isPending && (
+          {isPending ? "Masuk..." : isHydrated ? "Masuk" : "Memuat..."}
+          {!isPending && isHydrated && (
             <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
           )}
         </Button>
@@ -130,7 +144,7 @@ export function LoginForm() {
           type="button"
           variant="outline"
           onClick={() => toast.info("Login Google belum tersedia")}
-          className="h-12 w-full rounded-2xl border-black/10 bg-white/70 text-[15px] font-medium text-black/80 shadow-sm hover:bg-white"
+          className="h-11 sm:h-12 w-full rounded-2xl !border-black/10 !bg-white/70 text-[15px] font-medium !text-black/80 shadow-sm hover:!bg-white"
         >
           <GoogleIcon className="size-4" />
           Lanjut dengan Google

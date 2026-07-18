@@ -5,11 +5,17 @@ import { requireUser } from "@/lib/auth-helpers"
 import { getSaldoKas } from "@/lib/queries"
 import { formatRupiah, formatTanggalPendek } from "@/lib/format"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { AnimatedCounter } from "@/components/ui/animated-counter"
 import { TransactionDialog } from "./transaction-dialog"
 import { DeleteTransactionButton } from "./delete-transaction-button"
 
-export default async function KasPage() {
+export default async function KasPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ new?: string }>
+}) {
   const user = await requireUser()
+  const { new: openNew } = await searchParams
   const canManage = user.role === "ADMIN" || user.role === "PENGURUS"
 
   const [saldo, transactions] = await Promise.all([
@@ -22,14 +28,14 @@ export default async function KasPage() {
 
   return (
     <div className="grid gap-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold">Kas</h1>
           <p className="text-muted-foreground">
             Pemasukan & pengeluaran, transparan buat semua.
           </p>
         </div>
-        {canManage && <TransactionDialog />}
+        {canManage && <TransactionDialog defaultOpen={openNew === "1"} />}
       </div>
 
       <Card>
@@ -39,7 +45,9 @@ export default async function KasPage() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-3xl font-semibold">{formatRupiah(saldo)}</p>
+          <p className="text-3xl font-semibold">
+            <AnimatedCounter value={saldo} prefix="Rp " />
+          </p>
         </CardContent>
       </Card>
 
