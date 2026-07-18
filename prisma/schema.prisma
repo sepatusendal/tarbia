@@ -47,8 +47,39 @@ model Member {
   attendances  Attendance[]
   petugas      Petugas[]
   transactions Transaction[] @relation("RecordedBy")
+  quranBookmarks QuranBookmark[]
+  quranLastRead  QuranLastRead?
 
   @@map("members")
+}
+
+model QuranBookmark {
+  id          String   @id @default(cuid())
+  memberId    String
+  surahId     Int
+  surahName   String
+  ayahNumber  Int
+  arabicText  String
+  translation String
+  createdAt   DateTime @default(now())
+
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([memberId, surahId, ayahNumber])
+  @@map("quran_bookmarks")
+}
+
+model QuranLastRead {
+  id         String   @id @default(cuid())
+  memberId   String   @unique
+  surahId    Int
+  surahName  String
+  ayahNumber Int
+  updatedAt  DateTime @updatedAt
+
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@map("quran_last_read")
 }
 
 model Meeting {
