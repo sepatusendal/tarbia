@@ -29,8 +29,8 @@ const kategoriPengeluaran = ["Konsumsi", "Operasional", "Kegiatan Lainnya"]
 
 const initialState: TransactionFormState = {}
 
-export function TransactionDialog() {
-  const [open, setOpen] = useState(false)
+export function TransactionDialog({ defaultOpen = false }: { defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(defaultOpen)
   const [type, setType] = useState<"PEMASUKAN" | "PENGELUARAN">("PEMASUKAN")
   const [state, setState] = useState<TransactionFormState>(initialState)
   const [isPending, startTransition] = useTransition()
