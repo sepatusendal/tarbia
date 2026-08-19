@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { Suspense } from "react"
 import {
   MapPin,
   CalendarClock,
@@ -32,6 +33,7 @@ import { AnimatedCounter } from "@/components/ui/animated-counter"
 import { CountdownBadge } from "@/components/shared/countdown-badge"
 import { ChartCard } from "@/components/charts/chart-card"
 import { GreetingHero } from "@/components/dashboard/greeting-hero"
+import { LoadingSpinner } from "@/components/shared/loading-spinner"
 import { TodaysReflectionCard } from "@/components/quran/todays-reflection-card"
 import { RelatedVersesCard } from "@/components/quran/related-verses-card"
 import { ContinueReadingCard } from "@/components/quran/continue-reading-card"
@@ -150,15 +152,23 @@ export default async function DashboardPage() {
         className="animate-fade-up"
         style={{ animationDelay: "70ms" }}
       >
-        <ContinueReadingCard memberId={user.id} />
+        <Suspense fallback={<LoadingSpinner />}>
+          <ContinueReadingCard memberId={user.id} />
+        </Suspense>
       </section>
 
       <section
         className="grid gap-3 animate-fade-up"
         style={{ animationDelay: "80ms" }}
       >
-        <TodaysReflectionCard />
-        {nextMeeting?.tema && <RelatedVersesCard theme={nextMeeting.tema} />}
+        <Suspense fallback={<LoadingSpinner />}>
+          <TodaysReflectionCard />
+        </Suspense>
+        {nextMeeting?.tema && (
+          <Suspense fallback={<LoadingSpinner />}>
+            <RelatedVersesCard theme={nextMeeting.tema} />
+          </Suspense>
+        )}
       </section>
 
       {nextMeeting?.catatan && (
