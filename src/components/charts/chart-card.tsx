@@ -96,7 +96,7 @@ export function ChartCard({
           <div className="flex items-center justify-between">
             <p className="text-sm font-medium">{title}</p>
             <span className="flex items-center gap-0.5 text-xs text-muted-foreground">
-              Tap
+              Detail
               <ChevronRight className="size-3.5" />
             </span>
           </div>

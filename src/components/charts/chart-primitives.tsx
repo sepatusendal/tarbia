@@ -18,6 +18,17 @@ function useHoverIndex() {
   }
 }
 
+function EmptyState({ height }: { height: number }) {
+  return (
+    <div
+      className="flex w-full items-center justify-center text-xs text-muted-foreground"
+      style={{ height }}
+    >
+      Belum ada data
+    </div>
+  )
+}
+
 function Tooltip({ x, y, children }: { x: number; y: number; children: React.ReactNode }) {
   return (
     <g transform={`translate(${x}, ${y})`} className="pointer-events-none">
@@ -56,8 +67,11 @@ export function Sparkline({
   valueSuffix?: string
 }) {
   const { index, handlers } = useHoverIndex()
+  const hasData = data.some((d) => d.value > 0)
   const max = Math.max(...data.map((d) => d.value), 1)
   const barWidth = 100 / data.length
+
+  if (!hasData) return <EmptyState height={height} />
 
   return (
     <div className="w-full">
@@ -125,8 +139,11 @@ export function AreaSpark({
   showLegend?: boolean
 }) {
   const { index, handlers } = useHoverIndex()
+  const hasData = data.some((d) => d.income > 0 || d.expense > 0)
   const max = Math.max(...data.map((d) => Math.max(d.income, d.expense)), 1)
   const stepX = 100 / (data.length - 1 || 1)
+
+  if (!hasData) return <EmptyState height={height} />
 
   function pathFor(key: "income" | "expense") {
     return data
@@ -218,8 +235,11 @@ export function BarsSpark({
   showLabels?: boolean
 }) {
   const { index, handlers } = useHoverIndex()
+  const hasData = data.some((d) => d.value > 0)
   const max = Math.max(...data.map((d) => d.value), 1)
   const barWidth = 100 / data.length
+
+  if (!hasData) return <EmptyState height={height} />
 
   return (
     <div className="w-full">
@@ -282,12 +302,15 @@ export function HeatmapStrip({
   showLabels?: boolean
 }) {
   const { index, handlers } = useHoverIndex()
+  const hasData = data.some((d) => d.value > 0)
   const max = Math.max(...data.map((d) => d.value), 1)
 
   function intensity(value: number) {
     if (value === 0) return 0.08
     return 0.25 + (value / max) * 0.75
   }
+
+  if (!hasData) return <EmptyState height={40} />
 
   return (
     <div className="w-full">
@@ -303,6 +326,7 @@ export function HeatmapStrip({
               style={{
                 background: primaryColor,
                 opacity: intensity(d.value),
+                ["--pop-in-opacity" as string]: intensity(d.value),
                 animationDelay: `${i * 35}ms`,
               }}
             />

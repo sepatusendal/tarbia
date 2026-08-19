@@ -305,7 +305,10 @@
     transform: scale(0.6);
   }
   to {
-    opacity: 1;
+    /* Reads --pop-in-opacity so callers that vary final opacity by data
+       (e.g. heatmap intensity) aren't clobbered by the animation holding
+       opacity:1 at its end state (fill-mode: both beats inline style). */
+    opacity: var(--pop-in-opacity, 1);
     transform: scale(1);
   }
 }
