@@ -1,6 +1,30 @@
 import { Sunrise, Sun, Sunset, Moon, CalendarDays } from "lucide-react"
 
-import { formatTanggal } from "@/lib/format"
+// The app is for a Jakarta-based org, but Vercel's server clock runs in
+// UTC — reading now.getHours() directly greeted people ~7 hours off from
+// their actual local time. Pin every read to WIB explicitly instead of
+// trusting the server's local timezone.
+const WIB_TIME_ZONE = "Asia/Jakarta"
+
+function wibHour(date: Date) {
+  return Number(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: WIB_TIME_ZONE,
+      hour: "numeric",
+      hourCycle: "h23",
+    }).format(date)
+  )
+}
+
+function formatTanggalWIB(date: Date) {
+  return new Intl.DateTimeFormat("id-ID", {
+    timeZone: WIB_TIME_ZONE,
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(date)
+}
 
 function timeOfDay(hour: number) {
   if (hour < 11) return { label: "Selamat Pagi", Icon: Sunrise }
@@ -10,7 +34,7 @@ function timeOfDay(hour: number) {
 }
 
 export function GreetingHero({ name, now }: { name: string; now: Date }) {
-  const { label, Icon } = timeOfDay(now.getHours())
+  const { label, Icon } = timeOfDay(wibHour(now))
 
   return (
     // Fixed dark-olive brand panel — deliberately NOT the semantic
@@ -76,7 +100,7 @@ export function GreetingHero({ name, now }: { name: string; now: Date }) {
 
         <p className="flex items-center gap-1.5 text-xs font-medium text-[#f9f8f1]/70">
           <CalendarDays className="size-3.5" />
-          {formatTanggal(now)}
+          {formatTanggalWIB(now)}
         </p>
       </div>
     </section>
