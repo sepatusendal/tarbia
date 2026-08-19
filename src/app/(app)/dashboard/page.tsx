@@ -31,6 +31,7 @@ import { Button } from "@/components/ui/button"
 import { AnimatedCounter } from "@/components/ui/animated-counter"
 import { CountdownBadge } from "@/components/shared/countdown-badge"
 import { ChartCard } from "@/components/charts/chart-card"
+import { GreetingHero } from "@/components/dashboard/greeting-hero"
 import { TodaysReflectionCard } from "@/components/quran/todays-reflection-card"
 import { RelatedVersesCard } from "@/components/quran/related-verses-card"
 import { ContinueReadingCard } from "@/components/quran/continue-reading-card"
@@ -44,14 +45,6 @@ async function allPeriods<T>(
     fn("yearly"),
   ])
   return { weekly, monthly, yearly }
-}
-
-function greeting() {
-  const hour = new Date().getHours()
-  if (hour < 11) return "Selamat Pagi"
-  if (hour < 15) return "Selamat Siang"
-  if (hour < 18) return "Selamat Sore"
-  return "Selamat Malam"
 }
 
 const activityIcon = {
@@ -88,11 +81,12 @@ export default async function DashboardPage() {
   const firstName = (user.name ?? "").split(" ")[0] || "Akhi/Ukhti"
 
   return (
-    <div className="grid gap-8 pb-6">
-      <section className="animate-fade-up">
-        <p className="text-muted-foreground text-sm font-medium">{greeting()} 👋</p>
-        <h1 className="mt-1 text-3xl font-semibold tracking-tight">{firstName}</h1>
-      </section>
+    <div className="relative grid gap-8 pb-6">
+      <div
+        className="pointer-events-none absolute -top-6 left-1/2 -z-10 h-64 w-[130%] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse_at_top,color-mix(in_srgb,var(--primary)_18%,transparent),transparent_70%)] blur-2xl"
+        aria-hidden="true"
+      />
+      <GreetingHero name={firstName} now={new Date()} />
 
       <section
         className="animate-fade-up"

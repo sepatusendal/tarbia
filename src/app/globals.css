@@ -39,6 +39,7 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-accent-gold: var(--accent-gold);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -81,6 +82,7 @@
   --sidebar-accent-foreground: #263721;
   --sidebar-border: #d8d9ce;
   --sidebar-ring: #6a8056;
+  --accent-gold: #b8863a;
 }
 
 .dark {
@@ -115,6 +117,7 @@
   --sidebar-accent-foreground: #edf0e8;
   --sidebar-border: #334033;
   --sidebar-ring: #b6cb89;
+  --accent-gold: #d9b672;
 }
 
 @layer base {
