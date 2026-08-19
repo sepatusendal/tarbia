@@ -1,9 +1,12 @@
-import { FileText, PlayCircle } from "lucide-react"
+import Link from "next/link"
+import { FileText, PlayCircle, CalendarPlus, BookOpen } from "lucide-react"
 
 import { prisma } from "@/lib/prisma"
 import { requireUser } from "@/lib/auth-helpers"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import { MeetingPicker } from "@/components/shared/meeting-picker"
+import { EmptyState } from "@/components/shared/empty-state"
 import { MateriForm } from "./materi-form"
 
 export default async function MateriPage({
@@ -31,9 +34,23 @@ export default async function MateriPage({
             Semua materi kajian, tersimpan rapi.
           </p>
         </div>
-        <p className="text-muted-foreground">
-          Belum ada jadwal pertemuan. Buat jadwal dulu di menu Jadwal.
-        </p>
+        <EmptyState
+          icon={BookOpen}
+          title="Belum ada jadwal pertemuan"
+          description="Materi kajian baru bisa ditambahkan setelah ada jadwal liqo."
+          action={
+            <Button
+              nativeButton={false}
+              className="rounded-2xl"
+              render={
+                <Link href="/jadwal/new">
+                  <CalendarPlus className="size-4" />
+                  Buat Jadwal Baru
+                </Link>
+              }
+            />
+          }
+        />
       </div>
     )
   }

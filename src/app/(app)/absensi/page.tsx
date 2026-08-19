@@ -1,9 +1,14 @@
+import Link from "next/link"
+import { CalendarPlus, ClipboardCheck } from "lucide-react"
+
 import { prisma } from "@/lib/prisma"
 import { requireUser } from "@/lib/auth-helpers"
 import { formatTanggal } from "@/lib/format"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { MeetingPicker } from "@/components/shared/meeting-picker"
+import { EmptyState } from "@/components/shared/empty-state"
 import { AttendanceForm } from "./attendance-form"
 
 const statusLabel: Record<string, string> = {
@@ -87,9 +92,23 @@ export default async function AbsensiPage({
             Catat kehadiran anggota setiap pertemuan.
           </p>
         </div>
-        <p className="text-muted-foreground">
-          Belum ada jadwal pertemuan. Buat jadwal dulu di menu Jadwal.
-        </p>
+        <EmptyState
+          icon={ClipboardCheck}
+          title="Belum ada jadwal pertemuan"
+          description="Absensi baru bisa dicatat setelah ada jadwal liqo."
+          action={
+            <Button
+              nativeButton={false}
+              className="rounded-2xl"
+              render={
+                <Link href="/jadwal/new">
+                  <CalendarPlus className="size-4" />
+                  Buat Jadwal Baru
+                </Link>
+              }
+            />
+          }
+        />
       </div>
     )
   }
