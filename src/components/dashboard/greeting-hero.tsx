@@ -13,7 +13,10 @@ export function GreetingHero({ name, now }: { name: string; now: Date }) {
   const { label, Icon } = timeOfDay(now.getHours())
 
   return (
-    <section className="animate-fade-up relative overflow-hidden rounded-3xl bg-[linear-gradient(150deg,var(--primary),color-mix(in_srgb,var(--primary)_75%,#0d1a08)_100%)] px-5 py-6 text-primary-foreground shadow-lg shadow-primary/20 sm:px-7 sm:py-7">
+    // Fixed dark-olive brand panel — deliberately NOT the semantic
+    // --primary/--primary-foreground pair, since those invert in dark mode
+    // (primary becomes the light accent) and would wash this hero out.
+    <section className="animate-fade-up relative overflow-hidden rounded-3xl bg-[linear-gradient(150deg,#3f572f,#182410_100%)] px-5 py-6 text-[#f9f8f1] shadow-lg shadow-black/25 sm:px-7 sm:py-7">
       {/* Tiled geometric star pattern, brand texture rather than literal ornament */}
       <svg
         className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.09]"
