@@ -8,7 +8,6 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { SiteFooter } from "@/components/layout/site-footer"
 import { SocialLinks } from "@/components/layout/social-links"
 import { BottomNav } from "@/components/layout/bottom-nav"
-import { FloatingQuickAction } from "@/components/layout/floating-quick-action"
 
 export default async function AppLayout({
   children,
@@ -19,7 +18,7 @@ export default async function AppLayout({
 
   return (
     <div className="flex min-h-screen flex-1">
-      <aside className="hidden w-72 shrink-0 border-r border-sidebar-border bg-sidebar md:flex md:flex-col">
+      <aside className="hidden w-72 shrink-0 border-r border-sidebar-border bg-sidebar md:sticky md:top-0 md:flex md:h-dvh md:flex-col">
         <div className="flex h-24 items-center px-7">
           <Link href="/dashboard" className="flex items-center gap-3 text-lg font-semibold tracking-tight">
             <Image
@@ -69,7 +68,6 @@ export default async function AppLayout({
         </main>
       </div>
       <BottomNav />
-      <FloatingQuickAction />
       <div className="hidden md:block">
         <SocialLinks />
       </div>

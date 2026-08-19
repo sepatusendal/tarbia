@@ -8,6 +8,7 @@ import {
   ClipboardCheck,
   Wallet,
   BookOpen,
+  BookOpenText,
   Users,
 } from "lucide-react"
 
@@ -19,6 +20,7 @@ const links = [
   { href: "/absensi", label: "Absensi", icon: ClipboardCheck },
   { href: "/kas", label: "Kas", icon: Wallet },
   { href: "/materi", label: "Materi", icon: BookOpen },
+  { href: "/quran", label: "Al-Qur'an", icon: BookOpenText },
   { href: "/anggota", label: "Anggota", icon: Users },
 ]
 
