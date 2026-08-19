@@ -38,8 +38,12 @@ export default async function QuranPageReader({
       </div>
 
       <Card className="rounded-3xl">
-        <CardContent className="py-2">
-          <p dir="rtl" lang="ar" className="text-right text-3xl leading-loose">
+        <CardContent className="py-3">
+          <p
+            dir="rtl"
+            lang="ar"
+            className="font-arabic text-right text-[28px] leading-[2.6] text-balance sm:text-[32px]"
+          >
             {page.verses.map((v) => (
               <span key={v.verseKey}>
                 <Link
@@ -49,7 +53,7 @@ export default async function QuranPageReader({
                   {v.arabicText}
                 </Link>{" "}
                 <span
-                  className="mx-0.5 inline-flex size-6 items-center justify-center rounded-full bg-primary/10 align-middle text-[11px] font-semibold text-primary"
+                  className="mx-1 inline-flex size-7 items-center justify-center rounded-full bg-primary/10 align-middle text-xs font-semibold text-primary"
                   style={{ direction: "ltr" }}
                 >
                   {v.ayahNumber}

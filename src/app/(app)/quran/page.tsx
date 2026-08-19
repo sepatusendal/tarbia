@@ -108,7 +108,7 @@ export default async function QuranSearchPage({
                   <p
                     dir="rtl"
                     lang="ar"
-                    className="text-right text-lg leading-relaxed"
+                    className="font-arabic text-right text-xl leading-relaxed"
                   >
                     {v.arabicText}
                   </p>
