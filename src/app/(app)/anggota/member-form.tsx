@@ -5,6 +5,7 @@ import { useActionState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   Select,
   SelectContent,
@@ -118,13 +119,11 @@ export function MemberForm({
         )}
       </div>
 
-      <div className="flex items-center gap-2">
-        <input
+      <div className="flex items-center gap-2.5">
+        <Checkbox
           id="statusAktif"
           name="statusAktif"
-          type="checkbox"
           defaultChecked={defaultValues?.statusAktif ?? true}
-          className="size-4 rounded border-input"
         />
         <Label htmlFor="statusAktif">Anggota aktif</Label>
       </div>
@@ -133,7 +132,11 @@ export function MemberForm({
         <p className="text-destructive text-sm">{state.error}</p>
       )}
 
-      <Button type="submit" disabled={isPending}>
+      <Button
+        type="submit"
+        disabled={isPending}
+        className="h-11 rounded-2xl"
+      >
         {isPending ? "Menyimpan..." : submitLabel}
       </Button>
     </form>

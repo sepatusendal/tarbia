@@ -107,7 +107,7 @@ export function MeetingForm({
 
       {state.error && <p className="text-destructive text-sm">{state.error}</p>}
 
-      <Button type="submit" disabled={isPending}>
+      <Button type="submit" disabled={isPending} className="h-11 rounded-2xl">
         {isPending ? "Menyimpan..." : submitLabel}
       </Button>
     </form>
