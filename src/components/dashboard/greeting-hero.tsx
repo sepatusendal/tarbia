@@ -41,7 +41,7 @@ export function GreetingHero({ name, now }: { name: string; now: Date }) {
       {/* Crescent + stars accent, bleeding off the bottom-right corner */}
       <svg
         viewBox="0 0 160 160"
-        className="pointer-events-none absolute -right-6 -bottom-8 size-40 text-primary-foreground opacity-[0.14] sm:size-48"
+        className="pointer-events-none absolute -right-6 -bottom-8 size-40 text-[#f9f8f1] opacity-[0.14] sm:size-48"
         aria-hidden="true"
       >
         <path
@@ -62,10 +62,10 @@ export function GreetingHero({ name, now }: { name: string; now: Date }) {
 
       <div className="relative grid gap-4">
         <div className="flex items-center gap-2.5">
-          <span className="flex size-9 items-center justify-center rounded-full bg-primary-foreground/15">
+          <span className="flex size-9 items-center justify-center rounded-full bg-[#f9f8f1]/15">
             <Icon className="size-4.5" />
           </span>
-          <p className="text-sm font-medium text-primary-foreground/85">
+          <p className="text-sm font-medium text-[#f9f8f1]/85">
             {label}
           </p>
         </div>
@@ -74,7 +74,7 @@ export function GreetingHero({ name, now }: { name: string; now: Date }) {
           {name}
         </h1>
 
-        <p className="flex items-center gap-1.5 text-xs font-medium text-primary-foreground/70">
+        <p className="flex items-center gap-1.5 text-xs font-medium text-[#f9f8f1]/70">
           <CalendarDays className="size-3.5" />
           {formatTanggal(now)}
         </p>
