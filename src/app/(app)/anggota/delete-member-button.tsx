@@ -14,6 +14,8 @@ export function DeleteMemberButton({ memberId }: { memberId: string }) {
     <Button
       variant="ghost"
       size="icon-sm"
+      aria-label="Hapus anggota"
+      className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
       disabled={isPending}
       onClick={() => {
         if (!confirm("Hapus anggota ini?")) return

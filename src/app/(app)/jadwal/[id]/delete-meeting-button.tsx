@@ -12,8 +12,8 @@ export function DeleteMeetingButton({ meetingId }: { meetingId: string }) {
   return (
     <Button
       type="button"
-      variant="outline"
-      className="text-destructive hover:text-destructive"
+      variant="ghost"
+      className="text-destructive hover:bg-destructive/10 hover:text-destructive"
       disabled={isPending}
       onClick={() => {
         if (!confirm("Hapus jadwal pertemuan ini? Data absensi, petugas, dan materi yang terkait juga akan terhapus.")) {
@@ -25,7 +25,7 @@ export function DeleteMeetingButton({ meetingId }: { meetingId: string }) {
       }}
     >
       <Trash2 className="size-4" />
-      Hapus
+      {isPending ? "Menghapus..." : "Hapus"}
     </Button>
   )
 }
