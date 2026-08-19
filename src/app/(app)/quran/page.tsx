@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { redirect } from "next/navigation"
-import { Search, ChevronRight } from "lucide-react"
+import { Search, ChevronRight, BookOpen } from "lucide-react"
 
 import { requireUser } from "@/lib/auth-helpers"
 import { getChapters, getJuzList, searchQuran } from "@/lib/quran/client"
@@ -49,6 +49,23 @@ export default async function QuranSearchPage({
       </div>
 
       <ContinueReadingCard memberId={user.id} />
+
+      <Link href="/quran/page/1">
+        <Card className="rounded-2xl border-primary/10 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--primary)_9%,var(--card)),var(--card)_62%)] transition-colors active:bg-primary/10">
+          <CardContent className="flex items-center gap-3 py-3">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+              <BookOpen className="size-4.5" />
+            </span>
+            <div className="flex-1">
+              <p className="font-medium">Baca per Halaman</p>
+              <p className="text-sm text-muted-foreground">
+                Mushaf 604 halaman, seperti membaca Al-Qur&apos;an cetak
+              </p>
+            </div>
+            <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
+          </CardContent>
+        </Card>
+      </Link>
 
       <form method="GET" className="flex gap-2">
         <div className="relative flex-1">

@@ -1,6 +1,8 @@
 import "server-only"
 
-import type { Chapter, JuzInfo, SearchResult, Verse } from "@/types/quran"
+import type { Chapter, JuzInfo, PageVerse, QuranPage, SearchResult, Verse } from "@/types/quran"
+
+export const QURAN_PAGE_COUNT = 604
 
 const BASE_URL = "https://api.quran.com/api/v4"
 
@@ -112,7 +114,7 @@ export async function getVerseByKey(verseKey: string): Promise<Verse> {
       60 * 60 * 24
     ),
     getChapterName(surahId),
-    getChapterAudioUrl(surahId).catch(() => null),
+    getVerseAudioUrl(verseKey).catch(() => null),
   ])
 
   const translationRaw = data.verse.translations.find(
@@ -154,6 +156,28 @@ export async function getChapterAudioUrl(surahId: number): Promise<string | null
   }
 }
 
+const AUDIO_CDN_BASE = "https://verses.quran.com/"
+
+type VerseAudioResponse = {
+  audio_files: { verse_key: string; url: string }[]
+}
+
+// Per-ayah recitation, not the whole chapter — using the chapter's audio
+// file here played the surah from ayah 1 regardless of which verse was
+// open, so the audio never matched the verse on screen.
+export async function getVerseAudioUrl(verseKey: string): Promise<string | null> {
+  try {
+    const data = await questApi<VerseAudioResponse>(
+      `/recitations/${DEFAULT_RECITER_ID}/by_ayah/${verseKey}`,
+      60 * 60 * 24 * 7
+    )
+    const relativeUrl = data.audio_files[0]?.url
+    return relativeUrl ? `${AUDIO_CDN_BASE}${relativeUrl}` : null
+  } catch {
+    return null
+  }
+}
+
 // Deterministic "verse of the day" — same for everyone, changes once per
 // day, no server-side scheduling needed. Cycles through a curated pool of
 // well-known short verses so the daily pick is always meaningful rather
@@ -189,6 +213,51 @@ type SearchApiResponse = {
       text: string
       translations: { text: string }[]
     }[]
+  }
+}
+
+type VersesByPageResponse = {
+  verses: {
+    verse_key: string
+    text_uthmani: string
+    page_number: number
+    juz_number: number
+    sajdah_number: number | null
+  }[]
+}
+
+export async function getVersesByPage(pageNumber: number): Promise<QuranPage> {
+  const page = Math.min(Math.max(pageNumber, 1), QURAN_PAGE_COUNT)
+
+  const [data, chapters] = await Promise.all([
+    questApi<VersesByPageResponse>(
+      `/verses/by_page/${page}?fields=text_uthmani`,
+      60 * 60 * 24 * 30 // mushaf page contents never change
+    ),
+    getChapters(),
+  ])
+
+  const verses: PageVerse[] = data.verses.map((v) => {
+    const [surahIdStr, ayahStr] = v.verse_key.split(":")
+    return {
+      verseKey: v.verse_key,
+      surahId: Number(surahIdStr),
+      ayahNumber: Number(ayahStr),
+      arabicText: v.text_uthmani,
+      isSajdah: v.sajdah_number !== null,
+    }
+  })
+
+  const surahIds = [...new Set(verses.map((v) => v.surahId))]
+  const surahNames = surahIds.map(
+    (id) => chapters.find((c) => c.id === id)?.nameSimple ?? `Surah ${id}`
+  )
+
+  return {
+    pageNumber: page,
+    juzNumber: data.verses[0]?.juz_number ?? 1,
+    surahNames,
+    verses,
   }
 }
 

@@ -31,3 +31,18 @@ export type SearchResult = {
   arabicText: string
   translationSnippet: string
 }
+
+export type PageVerse = {
+  verseKey: string
+  surahId: number
+  ayahNumber: number
+  arabicText: string
+  isSajdah: boolean
+}
+
+export type QuranPage = {
+  pageNumber: number
+  juzNumber: number
+  surahNames: string[]
+  verses: PageVerse[]
+}
