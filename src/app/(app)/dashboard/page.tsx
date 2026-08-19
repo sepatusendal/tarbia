@@ -90,8 +90,8 @@ export default async function DashboardPage() {
   return (
     <div className="grid gap-8 pb-6">
       <section className="animate-fade-up">
-        <p className="text-muted-foreground text-sm">{greeting()} 👋</p>
-        <h1 className="text-2xl font-semibold">{firstName}</h1>
+        <p className="text-muted-foreground text-sm font-medium">{greeting()} 👋</p>
+        <h1 className="mt-1 text-3xl font-semibold tracking-tight">{firstName}</h1>
       </section>
 
       <section
@@ -102,11 +102,11 @@ export default async function DashboardPage() {
           Liqo Berikutnya
         </p>
         {nextMeeting ? (
-          <Card className="overflow-hidden rounded-3xl ring-primary/15">
-            <CardContent className="grid gap-4 py-1">
+          <Card className="overflow-hidden rounded-3xl border-primary/10 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--primary)_9%,var(--card)),var(--card)_58%)] ring-primary/15">
+            <CardContent className="grid gap-5 py-2">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="text-lg font-semibold">
+                  <p className="text-lg font-semibold tracking-tight">
                     {formatTanggalPendek(nextMeeting.tanggal)} · {nextMeeting.jam} WIB
                   </p>
                   <p className="mt-0.5 flex items-center gap-1 text-sm text-muted-foreground">
@@ -126,7 +126,7 @@ export default async function DashboardPage() {
               <Button
                 variant="outline"
                 nativeButton={false}
-                className="h-11 w-full rounded-2xl"
+                className="h-11 w-full rounded-xl bg-card/70"
                 render={
                   <Link href={`/jadwal/${nextMeeting.id}`}>
                     Lihat Detail
@@ -137,7 +137,7 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
         ) : (
-          <Card className="rounded-3xl">
+          <Card className="rounded-3xl border-dashed">
             <CardContent className="grid gap-3 py-2 text-center">
               <p className="text-muted-foreground">
                 Belum ada jadwal pertemuan mendatang.
@@ -196,6 +196,7 @@ export default async function DashboardPage() {
             label="Kehadiran"
             value={attendanceRate}
             suffix="%"
+            emphasis
           />
           <StatTile
             icon={Wallet}
@@ -209,8 +210,8 @@ export default async function DashboardPage() {
       </section>
 
       <section
-        className="grid gap-3"
-        style={{ animationDelay: "180ms" }}
+        className="grid gap-3 animate-fade-up"
+        style={{ animationDelay: "160ms" }}
       >
         <p className="text-sm font-medium text-muted-foreground">Insight</p>
 
@@ -264,7 +265,7 @@ export default async function DashboardPage() {
                     i !== activities.length - 1 ? "border-b border-border/60" : ""
                   }`}
                 >
-                  <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground">
+                  <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                     <Icon className="size-4" />
                   </span>
                   <div className="min-w-0 flex-1">
@@ -291,25 +292,39 @@ function StatTile({
   value,
   suffix,
   format,
+  emphasis,
 }: {
   icon: React.ComponentType<{ className?: string }>
   label: string
   value: number
   suffix?: string
   format?: "rupiah"
+  emphasis?: boolean
 }) {
   return (
-    <Card className="rounded-2xl">
+    <Card
+      className={
+        emphasis
+          ? "rounded-2xl border-primary/10 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--primary)_9%,var(--card)),var(--card)_62%)] ring-primary/15"
+          : "rounded-2xl"
+      }
+    >
       <CardContent className="grid gap-2 py-1">
-        <span className="flex size-8 items-center justify-center rounded-full bg-primary/10 text-primary">
+        <span
+          className={
+            emphasis
+              ? "flex size-8 items-center justify-center rounded-full bg-primary text-primary-foreground"
+              : "flex size-8 items-center justify-center rounded-full bg-primary/10 text-primary"
+          }
+        >
           <Icon className="size-4" />
         </span>
         {format === "rupiah" ? (
-          <p className="text-lg font-semibold leading-tight">
+          <p className="text-lg font-semibold leading-tight tracking-tight">
             <AnimatedCounter value={value} prefix="Rp " />
           </p>
         ) : (
-          <p className="text-2xl font-semibold leading-tight">
+          <p className="text-2xl font-semibold leading-tight tracking-tight">
             <AnimatedCounter value={value} suffix={suffix} />
           </p>
         )}

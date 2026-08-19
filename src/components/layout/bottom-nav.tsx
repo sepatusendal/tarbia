@@ -23,7 +23,7 @@ export function BottomNav() {
       className="fixed inset-x-0 bottom-0 z-40 flex justify-center pb-[max(0.75rem,env(safe-area-inset-bottom))] md:hidden"
       aria-label="Navigasi utama"
     >
-      <div className="glass-surface flex h-16 w-[min(400px,calc(100%-1.5rem))] items-center justify-between rounded-[26px] border border-border/60 px-1 shadow-lg shadow-black/10">
+      <div className="glass-surface flex h-[68px] w-[min(420px,calc(100%-1.5rem))] items-center justify-between rounded-[24px] border border-border/80 px-1 shadow-xl shadow-black/10">
         {links.map((link) => (
           <NavItem key={link.href} {...link} active={isActive(pathname, link.href)} />
         ))}
@@ -55,7 +55,7 @@ function NavItem({
       {active && (
         <motion.span
           layoutId="bottom-nav-active"
-          className="absolute inset-x-2.5 top-0.5 h-1 rounded-full bg-primary"
+          className="absolute inset-x-3 top-1 h-1 rounded-full bg-primary"
           transition={{ type: "spring", stiffness: 500, damping: 35 }}
         />
       )}

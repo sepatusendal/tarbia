@@ -26,7 +26,7 @@ export default async function ProfilePage() {
   return (
     <div className="grid gap-6 pb-4">
       <div className="flex flex-col items-center gap-3 pt-4 text-center">
-        <Avatar className="size-20 text-xl">
+        <Avatar className="size-20 border-4 border-card text-xl shadow-sm ring-1 ring-primary/15">
           <AvatarFallback>{initials}</AvatarFallback>
         </Avatar>
         <div>
@@ -37,7 +37,7 @@ export default async function ProfilePage() {
         </div>
       </div>
 
-      <Card>
+      <Card className="bg-card/80">
         <CardContent className="grid gap-4 py-4">
           <div className="flex items-center gap-3">
             <span className="flex size-9 items-center justify-center rounded-full bg-muted text-muted-foreground">

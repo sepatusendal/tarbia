@@ -38,14 +38,14 @@ export default async function KasPage({
         {canManage && <TransactionDialog defaultOpen={openNew === "1"} />}
       </div>
 
-      <Card>
+      <Card className="border-primary/10 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--primary)_10%,var(--card)),var(--card)_62%)]">
         <CardHeader>
-          <CardTitle className="text-base text-muted-foreground">
+          <CardTitle className="text-xs font-bold tracking-[0.12em] text-muted-foreground uppercase">
             Saldo Saat Ini
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-3xl font-semibold">
+          <p className="text-3xl font-semibold tracking-tight md:text-4xl">
             <AnimatedCounter value={saldo} prefix="Rp " />
           </p>
         </CardContent>

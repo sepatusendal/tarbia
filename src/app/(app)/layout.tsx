@@ -19,14 +19,14 @@ export default async function AppLayout({
 
   return (
     <div className="flex min-h-screen flex-1">
-      <aside className="hidden w-64 shrink-0 bg-sidebar md:flex md:flex-col">
-        <div className="flex h-16 items-center px-6">
-          <Link href="/dashboard" className="flex items-center gap-2 text-lg font-semibold">
+      <aside className="hidden w-72 shrink-0 border-r border-sidebar-border bg-sidebar md:flex md:flex-col">
+        <div className="flex h-24 items-center px-7">
+          <Link href="/dashboard" className="flex items-center gap-3 text-lg font-semibold tracking-tight">
             <Image
               src="/logo-icon.png"
               alt="Tarbia"
-              width={32}
-              height={35}
+              width={35}
+              height={38}
               className="dark:invert"
               unoptimized
               priority
@@ -34,19 +34,20 @@ export default async function AppLayout({
             Tarbia
           </Link>
         </div>
-        <div className="flex-1 overflow-y-auto px-4 py-2">
+        <div className="flex-1 overflow-y-auto px-5 py-4">
+          <p className="mb-3 px-3 text-[10px] font-bold tracking-[0.16em] text-muted-foreground uppercase">Ruang kerja</p>
           <NavLinks />
         </div>
       </aside>
-      <div className="flex flex-1 flex-col">
-        <header className="flex h-16 items-center justify-between px-4 md:px-6">
+      <div className="flex min-w-0 flex-1 flex-col">
+        <header className="flex h-20 items-center justify-between border-b border-border/70 bg-background/75 px-5 backdrop-blur-md md:h-24 md:px-10">
           <Link href="/dashboard" className="md:hidden">
             <Image
               src="/logo-full.png"
               alt="Tarbia"
               width={100}
               height={34}
-              className="h-8 w-auto dark:invert"
+              className="h-7 w-auto dark:invert"
               unoptimized
               priority
             />
@@ -58,8 +59,8 @@ export default async function AppLayout({
             </div>
           </div>
         </header>
-        <main className="flex flex-1 flex-col overflow-y-auto p-4 pb-28 md:p-6 md:pb-6">
-          <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col">
+        <main className="flex flex-1 flex-col overflow-y-auto px-4 py-6 pb-28 md:px-10 md:py-10 md:pb-8">
+          <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col">
             <div className="flex-1">{children}</div>
             <div className="hidden md:block">
               <SiteFooter />

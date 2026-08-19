@@ -26,7 +26,7 @@ export function NavLinks() {
   const pathname = usePathname()
 
   return (
-    <nav className="grid gap-1">
+    <nav className="grid gap-1.5">
       {links.map(({ href, label, icon: Icon }) => {
         const active = pathname === href || pathname.startsWith(`${href}/`)
         return (
@@ -34,10 +34,10 @@ export function NavLinks() {
             key={href}
             href={href}
             className={cn(
-              "flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-all",
+              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-all",
               active
-                ? "bg-primary text-primary-foreground shadow-sm"
-                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                ? "bg-primary text-primary-foreground shadow-[0_4px_12px_rgb(63_87_47_/_0.16)]"
+                : "text-muted-foreground hover:translate-x-0.5 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
             )}
           >
             <Icon className="size-4" />
