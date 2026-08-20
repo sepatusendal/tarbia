@@ -32,8 +32,7 @@ import { Button } from "@/components/ui/button"
 import { AnimatedCounter } from "@/components/ui/animated-counter"
 import { CountdownBadge } from "@/components/shared/countdown-badge"
 import { ChartCard } from "@/components/charts/chart-card"
-import { GreetingHero } from "@/components/dashboard/greeting-hero"
-import { PrayerTimesCard } from "@/components/dashboard/prayer-times-card"
+import { HeroCard } from "@/components/dashboard/hero-card"
 import { QuickAccessGrid } from "@/components/dashboard/quick-access-grid"
 import { LoadingSpinner } from "@/components/shared/loading-spinner"
 import { TodaysReflectionCard } from "@/components/quran/todays-reflection-card"
@@ -90,9 +89,7 @@ export default async function DashboardPage() {
         className="pointer-events-none absolute -top-6 left-1/2 -z-10 h-64 w-[130%] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse_at_top,color-mix(in_srgb,var(--primary)_18%,transparent),transparent_70%)] blur-2xl"
         aria-hidden="true"
       />
-      <GreetingHero name={firstName} now={new Date()} />
-
-      <PrayerTimesCard />
+      <HeroCard name={firstName} />
 
       <QuickAccessGrid />
 
