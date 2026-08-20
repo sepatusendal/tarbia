@@ -120,6 +120,11 @@ export default async function SurahReaderPage({
             >
               {verse.arabicText}
             </p>
+            {verse.transliteration && (
+              <p className="text-sm leading-relaxed text-foreground/90">
+                {verse.transliteration}
+              </p>
+            )}
             <p className="text-sm leading-relaxed text-muted-foreground">
               {verse.translation}
             </p>

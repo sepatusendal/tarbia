@@ -275,7 +275,7 @@ type VersesByChapterResponse = {
 // hundreds of round trips for the longer surahs.
 export async function getVersesByChapter(surahId: number): Promise<ChapterVerse[]> {
   const data = await questApi<VersesByChapterResponse>(
-    `/verses/by_chapter/${surahId}?translations=${TRANSLATION_ID}&fields=text_uthmani&per_page=300`,
+    `/verses/by_chapter/${surahId}?translations=${TRANSLATION_ID},${TRANSLITERATION_ID}&fields=text_uthmani&per_page=300`,
     60 * 60 * 24
   )
 
@@ -283,11 +283,15 @@ export async function getVersesByChapter(surahId: number): Promise<ChapterVerse[
     const translationRaw = v.translations.find(
       (t) => t.resource_id === TRANSLATION_ID
     )?.text
+    const transliterationRaw = v.translations.find(
+      (t) => t.resource_id === TRANSLITERATION_ID
+    )?.text
     return {
       verseKey: v.verse_key,
       ayahNumber: v.verse_number,
       arabicText: v.text_uthmani,
       translation: translationRaw ? stripHtml(translationRaw) : "",
+      transliteration: transliterationRaw ? stripHtml(transliterationRaw) : "",
     }
   })
 }

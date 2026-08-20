@@ -52,4 +52,5 @@ export type ChapterVerse = {
   ayahNumber: number
   arabicText: string
   translation: string
+  transliteration: string
 }
