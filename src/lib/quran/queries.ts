@@ -17,6 +17,14 @@ export async function isBookmarked(memberId: string, surahId: number, ayahNumber
   return !!bookmark
 }
 
+export async function getBookmarkedAyahNumbers(memberId: string, surahId: number) {
+  const bookmarks = await prisma.quranBookmark.findMany({
+    where: { memberId, surahId },
+    select: { ayahNumber: true },
+  })
+  return new Set(bookmarks.map((b) => b.ayahNumber))
+}
+
 export async function getLastRead(memberId: string) {
   return prisma.quranLastRead.findUnique({ where: { memberId } })
 }

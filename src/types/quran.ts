@@ -46,3 +46,10 @@ export type QuranPage = {
   surahNames: string[]
   verses: PageVerse[]
 }
+
+export type ChapterVerse = {
+  verseKey: string
+  ayahNumber: number
+  arabicText: string
+  translation: string
+}

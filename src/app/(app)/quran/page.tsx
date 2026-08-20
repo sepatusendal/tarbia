@@ -211,7 +211,7 @@ function ChapterRow({
   number?: number
 }) {
   return (
-    <Link href={`/quran/${chapterId}/1`}>
+    <Link href={`/quran/surah/${chapterId}`}>
       <Card className="rounded-2xl transition-colors active:bg-muted/50">
         <CardContent className="flex items-center justify-between py-3">
           <div className="flex items-center gap-3">

@@ -33,6 +33,8 @@ import { AnimatedCounter } from "@/components/ui/animated-counter"
 import { CountdownBadge } from "@/components/shared/countdown-badge"
 import { ChartCard } from "@/components/charts/chart-card"
 import { GreetingHero } from "@/components/dashboard/greeting-hero"
+import { PrayerTimesCard } from "@/components/dashboard/prayer-times-card"
+import { QuickAccessGrid } from "@/components/dashboard/quick-access-grid"
 import { LoadingSpinner } from "@/components/shared/loading-spinner"
 import { TodaysReflectionCard } from "@/components/quran/todays-reflection-card"
 import { RelatedVersesCard } from "@/components/quran/related-verses-card"
@@ -89,6 +91,10 @@ export default async function DashboardPage() {
         aria-hidden="true"
       />
       <GreetingHero name={firstName} now={new Date()} />
+
+      <PrayerTimesCard />
+
+      <QuickAccessGrid />
 
       <section
         className="animate-fade-up"

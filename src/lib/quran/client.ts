@@ -1,6 +1,6 @@
 import "server-only"
 
-import type { Chapter, JuzInfo, PageVerse, QuranPage, SearchResult, Verse } from "@/types/quran"
+import type { Chapter, ChapterVerse, JuzInfo, PageVerse, QuranPage, SearchResult, Verse } from "@/types/quran"
 
 export const QURAN_PAGE_COUNT = 604
 
@@ -259,6 +259,37 @@ export async function getVersesByPage(pageNumber: number): Promise<QuranPage> {
     surahNames,
     verses,
   }
+}
+
+type VersesByChapterResponse = {
+  verses: {
+    verse_key: string
+    verse_number: number
+    text_uthmani: string
+    translations: { resource_id: number; text: string }[]
+  }[]
+}
+
+// Whole surah in one request (Al-Baqarah's 286 verses included) for the
+// continuous mushaf-style reader — fetching verse-by-verse would be
+// hundreds of round trips for the longer surahs.
+export async function getVersesByChapter(surahId: number): Promise<ChapterVerse[]> {
+  const data = await questApi<VersesByChapterResponse>(
+    `/verses/by_chapter/${surahId}?translations=${TRANSLATION_ID}&fields=text_uthmani&per_page=300`,
+    60 * 60 * 24
+  )
+
+  return data.verses.map((v) => {
+    const translationRaw = v.translations.find(
+      (t) => t.resource_id === TRANSLATION_ID
+    )?.text
+    return {
+      verseKey: v.verse_key,
+      ayahNumber: v.verse_number,
+      arabicText: v.text_uthmani,
+      translation: translationRaw ? stripHtml(translationRaw) : "",
+    }
+  })
 }
 
 export async function searchQuran(query: string, size = 10): Promise<SearchResult[]> {
