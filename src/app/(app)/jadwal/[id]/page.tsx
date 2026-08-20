@@ -45,7 +45,7 @@ export default async function MeetingDetailPage({
 
   return (
     <div className="mx-auto grid max-w-2xl gap-6">
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold">
             {formatTanggal(meeting.tanggal)}
@@ -55,9 +55,10 @@ export default async function MeetingDetailPage({
           </p>
         </div>
         {isAdmin && (
-          <div className="flex gap-2">
+          <div className="flex shrink-0 gap-2">
             <Button
               variant="outline"
+              nativeButton={false}
               render={
                 <Link href={`/jadwal/${meeting.id}/edit`}>
                   <Pencil className="size-4" />
