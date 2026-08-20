@@ -77,7 +77,11 @@ export function AttendanceForm({
           </Select>
         </div>
       ))}
-      <Button onClick={handleSave} disabled={isPending} className="mt-2">
+      <Button
+        onClick={handleSave}
+        disabled={isPending}
+        className="mt-2 h-11 rounded-2xl"
+      >
         {isPending ? "Menyimpan..." : "Simpan Absensi"}
       </Button>
     </div>

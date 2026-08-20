@@ -120,9 +120,11 @@ export default async function MeetingDetailPage({
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Link href={`/absensi?meetingId=${meeting.id}`}>
-          <Card className="transition-colors hover:bg-muted/50">
+          <Card className="rounded-2xl transition-colors active:bg-muted/50">
             <CardContent className="flex items-center gap-3 py-4">
-              <ClipboardCheck className="size-5" />
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <ClipboardCheck className="size-4" />
+              </span>
               <div>
                 <p className="font-medium">Absensi</p>
                 <p className="text-muted-foreground text-sm">
@@ -133,9 +135,11 @@ export default async function MeetingDetailPage({
           </Card>
         </Link>
         <Link href={`/materi?meetingId=${meeting.id}`}>
-          <Card className="transition-colors hover:bg-muted/50">
+          <Card className="rounded-2xl transition-colors active:bg-muted/50">
             <CardContent className="flex items-center gap-3 py-4">
-              <BookOpen className="size-5" />
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <BookOpen className="size-4" />
+              </span>
               <div>
                 <p className="font-medium">Materi</p>
                 <p className="text-muted-foreground text-sm">
