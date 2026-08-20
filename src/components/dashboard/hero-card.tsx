@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { motion } from "framer-motion"
 import { Sunrise, Sun, Sunset, Moon, CalendarDays } from "lucide-react"
 
 import {
@@ -107,6 +108,13 @@ export function HeroCard({ name }: { name: string }) {
   const { times, next } = getTodayPrayerSchedule(now)
   const countdownMs = next ? next.time.getTime() - now.getTime() : 0
 
+  const dayStart = times.fajr.getTime()
+  const dayEnd = times.isha.getTime()
+  const progressPct = Math.min(
+    100,
+    Math.max(0, ((now.getTime() - dayStart) / (dayEnd - dayStart)) * 100)
+  )
+
   return (
     <Shell>
       <div className="flex items-start justify-between gap-3">
@@ -138,6 +146,17 @@ export function HeroCard({ name }: { name: string }) {
             {formatCountdown(countdownMs)} lagi
           </p>
         )}
+        {/* Progress from Subuh to Isya — a quiet visual cue for "how far
+            into the prayer day we are", not just a static time list. */}
+        <div className="relative mb-4 h-1.5 overflow-hidden rounded-full bg-[#f9f8f1]/15">
+          <motion.div
+            className="h-full rounded-full bg-accent-gold"
+            initial={{ width: 0 }}
+            animate={{ width: `${progressPct}%` }}
+            transition={{ duration: 1, ease: "easeOut" }}
+          />
+        </div>
+
         <div className="grid grid-cols-6 gap-1">
           {PRAYER_ORDER.map((name) => {
             const isNext = next?.name === name
@@ -145,19 +164,24 @@ export function HeroCard({ name }: { name: string }) {
               <div
                 key={name}
                 className={cn(
-                  "flex flex-col items-center gap-0.5 rounded-xl py-1.5",
-                  isNext && "bg-[#f9f8f1]/12"
+                  "flex flex-col items-center gap-1 rounded-xl py-2",
+                  isNext && "bg-[#f9f8f1]/15"
                 )}
               >
                 <p
                   className={cn(
-                    "text-[10px] font-medium",
-                    isNext ? "text-accent-gold" : "text-[#f9f8f1]/70"
+                    "text-xs font-bold",
+                    isNext ? "text-accent-gold" : "text-[#f9f8f1]"
                   )}
                 >
                   {PRAYER_LABELS[name]}
                 </p>
-                <p className="text-[10px] text-[#f9f8f1]/60">
+                <p
+                  className={cn(
+                    "text-xs font-semibold",
+                    isNext ? "text-[#f9f8f1]" : "text-[#f9f8f1]/80"
+                  )}
+                >
                   {formatWIBTime(times[name])}
                 </p>
               </div>
