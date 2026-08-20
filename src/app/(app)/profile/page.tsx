@@ -1,4 +1,5 @@
-import { LogOut, Phone, Shield } from "lucide-react"
+import Link from "next/link"
+import { LogOut, Phone, Shield, Pencil } from "lucide-react"
 
 import { requireUser } from "@/lib/auth-helpers"
 import { signOut } from "@/auth"
@@ -35,12 +36,24 @@ export default async function ProfilePage() {
             {roleLabel[user.role] ?? user.role}
           </p>
         </div>
+        <Button
+          variant="outline"
+          size="sm"
+          nativeButton={false}
+          className="rounded-full"
+          render={
+            <Link href="/profile/edit">
+              <Pencil className="size-3.5" />
+              Ubah Profil
+            </Link>
+          }
+        />
       </div>
 
       <Card className="bg-card/80">
         <CardContent className="grid gap-4 py-4">
           <div className="flex items-center gap-3">
-            <span className="flex size-9 items-center justify-center rounded-full bg-muted text-muted-foreground">
+            <span className="flex size-9 items-center justify-center rounded-full bg-primary/10 text-primary">
               <Phone className="size-4" />
             </span>
             <div>
@@ -49,7 +62,7 @@ export default async function ProfilePage() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <span className="flex size-9 items-center justify-center rounded-full bg-muted text-muted-foreground">
+            <span className="flex size-9 items-center justify-center rounded-full bg-primary/10 text-primary">
               <Shield className="size-4" />
             </span>
             <div>

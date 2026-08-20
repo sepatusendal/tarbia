@@ -91,7 +91,7 @@ export function MateriForm({
         <p className="text-destructive text-sm">{state.error}</p>
       )}
 
-      <Button type="submit" disabled={isPending}>
+      <Button type="submit" disabled={isPending} className="h-11 rounded-2xl">
         {isPending ? "Menyimpan..." : "Simpan Materi"}
       </Button>
     </form>
