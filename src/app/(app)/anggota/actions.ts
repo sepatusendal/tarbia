@@ -7,6 +7,7 @@ import { z } from "zod"
 
 import { prisma } from "@/lib/prisma"
 import { requireRole } from "@/lib/auth-helpers"
+import { updateSession } from "@/auth"
 
 const baseSchema = {
   nama: z.string().min(1, "Nama wajib diisi"),
@@ -71,7 +72,7 @@ export async function updateMember(
   _prevState: MemberFormState,
   formData: FormData
 ): Promise<MemberFormState> {
-  await requireRole(["ADMIN"])
+  const admin = await requireRole(["ADMIN"])
 
   const parsed = updateSchema.safeParse(Object.fromEntries(formData))
   if (!parsed.success) {
@@ -98,6 +99,15 @@ export async function updateMember(
         : {}),
     },
   })
+
+  // An admin editing their own record hits the same JWT-staleness issue
+  // as the self-service profile edit — refresh the session if that's
+  // what just happened.
+  if (admin.id === memberId) {
+    await updateSession({
+      user: { name: parsed.data.nama, role: parsed.data.role },
+    })
+  }
 
   revalidatePath("/anggota")
   redirect("/anggota")

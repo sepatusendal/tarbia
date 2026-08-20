@@ -12,7 +12,7 @@ const credentialsSchema = z.object({
   password: z.string().min(1),
 })
 
-export const { auth, signIn, signOut, handlers } = NextAuth({
+export const { auth, signIn, signOut, handlers, unstable_update: updateSession } = NextAuth({
   ...authConfig,
   session: { strategy: "jwt" },
   providers: [
@@ -47,11 +47,19 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
   ],
   callbacks: {
     ...authConfig.callbacks,
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id as string
         token.role = user.role as Role
         token.nomorHp = user.nomorHp as string
+      }
+      // Fired by updateSession() after a profile edit — the JWT strategy
+      // otherwise keeps whatever name/role was true at sign-in for the
+      // entire session lifetime, so a self-edited name never showed up
+      // until the next login.
+      if (trigger === "update" && session?.user) {
+        if (session.user.name) token.name = session.user.name as string
+        if (session.user.role) token.role = session.user.role as Role
       }
       return token
     },

@@ -7,6 +7,7 @@ import { z } from "zod"
 
 import { prisma } from "@/lib/prisma"
 import { requireUser } from "@/lib/auth-helpers"
+import { updateSession } from "@/auth"
 import type { MemberFormState } from "../anggota/actions"
 
 const schema = z.object({
@@ -37,6 +38,11 @@ export async function updateOwnProfile(
         : {}),
     },
   })
+
+  // Without this the JWT keeps the sign-in-time name for the rest of the
+  // session — the edit saves correctly but the UI keeps showing the old
+  // name until the next login, which reads as "it didn't save".
+  await updateSession({ user: { name: parsed.data.nama } })
 
   revalidatePath("/profile")
   redirect("/profile")
