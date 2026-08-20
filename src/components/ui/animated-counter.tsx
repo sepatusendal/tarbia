@@ -24,6 +24,17 @@ export function AnimatedCounter({
     if (ranRef.current) return
     ranRef.current = true
 
+    // requestAnimationFrame is throttled to ~0fps for a hidden/background
+    // tab (e.g. mounted while backgrounded, or the screen locked mid-load).
+    // The old version called setDisplay(0) unconditionally and relied on
+    // rAF ticks to climb back up — if those never fire, a real balance
+    // stays stuck showing "Rp 0" indefinitely. Skip the animation and
+    // show the real value immediately when the page isn't visible.
+    if (document.visibilityState !== "visible") {
+      setDisplay(value)
+      return
+    }
+
     const start = performance.now()
     let frame: number
 

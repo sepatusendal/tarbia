@@ -1,6 +1,7 @@
 "use client"
 
-import { useActionState } from "react"
+import { useActionState, useState } from "react"
+import { FileUp } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -27,6 +28,7 @@ export function MateriForm({
     saveMateri,
     initialState
   )
+  const [fileName, setFileName] = useState<string | null>(null)
 
   return (
     <form action={formAction} className="grid gap-4">
@@ -59,7 +61,26 @@ export function MateriForm({
 
       <div className="grid gap-2">
         <Label htmlFor="file">File PDF (opsional)</Label>
-        <Input id="file" name="file" type="file" accept="application/pdf" />
+        <div className="relative">
+          <input
+            id="file"
+            name="file"
+            type="file"
+            accept="application/pdf"
+            onChange={(e) => setFileName(e.target.files?.[0]?.name ?? null)}
+            className="absolute inset-0 h-11 w-full cursor-pointer opacity-0"
+          />
+          <div className="flex h-11 items-center gap-2 rounded-xl border border-input bg-background/60 px-3 text-sm">
+            <FileUp className="size-4 shrink-0 text-muted-foreground" />
+            <span
+              className={
+                fileName ? "truncate text-foreground" : "text-muted-foreground"
+              }
+            >
+              {fileName ?? "Pilih file PDF"}
+            </span>
+          </div>
+        </div>
         {defaultValues?.fileUrl && (
           <p className="text-muted-foreground text-sm">
             Sudah ada file tersimpan. Upload file baru untuk mengganti.
