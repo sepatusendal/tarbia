@@ -29,28 +29,44 @@ function EmptyState({ height }: { height: number }) {
   )
 }
 
+const TOOLTIP_HALF_WIDTH = 24
+
 function Tooltip({ x, y, children }: { x: number; y: number; children: React.ReactNode }) {
+  // The chart viewBox is 0-100 wide; a tooltip centered on a point near
+  // either edge (most commonly the rightmost/most-recent point — the one
+  // people check first) drew half its box outside that range and got
+  // clipped by the container. Keep the anchor (and any connector the
+  // caller draws) at the true point, but slide just the box+text inward
+  // so it always stays fully visible.
+  const clampedX = Math.min(
+    Math.max(x, TOOLTIP_HALF_WIDTH),
+    100 - TOOLTIP_HALF_WIDTH
+  )
+  const boxOffsetX = clampedX - x
+
   return (
     <g transform={`translate(${x}, ${y})`} className="pointer-events-none">
-      <rect
-        x={-24}
-        y={-28}
-        width={48}
-        height={20}
-        rx={6}
-        fill="var(--popover)"
-        stroke="var(--border)"
-      />
-      <text
-        x={0}
-        y={-14}
-        textAnchor="middle"
-        fontSize={10}
-        fill="var(--popover-foreground)"
-        fontWeight={600}
-      >
-        {children}
-      </text>
+      <g transform={`translate(${boxOffsetX}, 0)`}>
+        <rect
+          x={-24}
+          y={-28}
+          width={48}
+          height={20}
+          rx={6}
+          fill="var(--popover)"
+          stroke="var(--border)"
+        />
+        <text
+          x={0}
+          y={-14}
+          textAnchor="middle"
+          fontSize={10}
+          fill="var(--popover-foreground)"
+          fontWeight={600}
+        >
+          {children}
+        </text>
+      </g>
     </g>
   )
 }
