@@ -17,7 +17,14 @@ export const authConfig = {
         return true
       }
 
-      return isLoggedIn
+      // Redirect manually (rather than returning false) so NextAuth doesn't
+      // tack on a `?callbackUrl=...` — login always sends users to
+      // /dashboard regardless (see login/actions.ts), so it'd go unused.
+      if (!isLoggedIn) {
+        return Response.redirect(new URL("/login", nextUrl))
+      }
+
+      return true
     },
   },
   providers: [],
