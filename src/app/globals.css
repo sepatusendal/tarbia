@@ -126,11 +126,11 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground overflow-x-hidden;
     background-image: radial-gradient(circle at 0% 0%, color-mix(in srgb, var(--primary) 7%, transparent), transparent 32rem);
   }
   html {
-    @apply font-sans;
+    @apply font-sans overflow-x-hidden;
   }
 }
 

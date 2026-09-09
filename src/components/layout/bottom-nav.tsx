@@ -25,10 +25,10 @@ export function BottomNav() {
 
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-40 flex justify-center pb-[max(0.75rem,env(safe-area-inset-bottom))] md:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 flex justify-center md:hidden"
       aria-label="Navigasi utama"
     >
-      <div className="glass-surface relative flex h-16 w-[min(400px,calc(100%-1.5rem))] items-center rounded-[26px] border border-border/80 px-1 shadow-xl shadow-black/10">
+      <div className="glass-surface relative flex h-16 w-full items-center rounded-t-[26px] border-t border-border/80 px-1 pb-[env(safe-area-inset-bottom)] shadow-xl shadow-black/10">
         {links.slice(0, 2).map((link) => (
           <NavItem key={link.href} {...link} active={isActive(pathname, link.href)} />
         ))}
