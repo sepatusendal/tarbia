@@ -1,16 +1,14 @@
 import "server-only"
 
 import type { Chapter, ChapterVerse, JuzInfo, PageVerse, QuranPage, SearchResult, Verse } from "@/types/quran"
+import { getSurahLatinMap, getVerseLatin } from "@/lib/quran/equran"
 
 export const QURAN_PAGE_COUNT = 604
 
 const BASE_URL = "https://api.quran.com/api/v4"
 
-// Indonesian Islamic Affairs Ministry (Kemenag) translation, and the
-// "Transliteration" resource — both are served through the same
-// translations param.
+// Indonesian Islamic Affairs Ministry (Kemenag) translation.
 const TRANSLATION_ID = 33
-const TRANSLITERATION_ID = 57
 const DEFAULT_RECITER_ID = 7 // Mishari Al-Afasy
 
 // The Kemenag translation embeds footnote markers as raw HTML
@@ -108,24 +106,21 @@ export async function getVerseByKey(verseKey: string): Promise<Verse> {
   const surahId = Number(surahIdStr)
   const ayahNumber = Number(ayahStr)
 
-  const [data, name, audio] = await Promise.all([
+  const [data, name, audio, transliteration] = await Promise.all([
     questApi<VerseByKeyResponse>(
-      `/verses/by_key/${verseKey}?translations=${TRANSLATION_ID},${TRANSLITERATION_ID}&fields=text_uthmani`,
+      `/verses/by_key/${verseKey}?translations=${TRANSLATION_ID}&fields=text_uthmani`,
       60 * 60 * 24
     ),
     getChapterName(surahId),
     getVerseAudioUrl(verseKey).catch(() => null),
+    getVerseLatin(surahId, ayahNumber),
   ])
 
   const translationRaw = data.verse.translations.find(
     (t) => t.resource_id === TRANSLATION_ID
   )?.text
-  const transliterationRaw = data.verse.translations.find(
-    (t) => t.resource_id === TRANSLITERATION_ID
-  )?.text
 
   const translation = translationRaw ? stripHtml(translationRaw) : ""
-  const transliteration = transliterationRaw ? stripHtml(transliterationRaw) : null
 
   return {
     surahId,
@@ -274,24 +269,24 @@ type VersesByChapterResponse = {
 // continuous mushaf-style reader — fetching verse-by-verse would be
 // hundreds of round trips for the longer surahs.
 export async function getVersesByChapter(surahId: number): Promise<ChapterVerse[]> {
-  const data = await questApi<VersesByChapterResponse>(
-    `/verses/by_chapter/${surahId}?translations=${TRANSLATION_ID},${TRANSLITERATION_ID}&fields=text_uthmani&per_page=300`,
-    60 * 60 * 24
-  )
+  const [data, latinMap] = await Promise.all([
+    questApi<VersesByChapterResponse>(
+      `/verses/by_chapter/${surahId}?translations=${TRANSLATION_ID}&fields=text_uthmani&per_page=300`,
+      60 * 60 * 24
+    ),
+    getSurahLatinMap(surahId),
+  ])
 
   return data.verses.map((v) => {
     const translationRaw = v.translations.find(
       (t) => t.resource_id === TRANSLATION_ID
-    )?.text
-    const transliterationRaw = v.translations.find(
-      (t) => t.resource_id === TRANSLITERATION_ID
     )?.text
     return {
       verseKey: v.verse_key,
       ayahNumber: v.verse_number,
       arabicText: v.text_uthmani,
       translation: translationRaw ? stripHtml(translationRaw) : "",
-      transliteration: transliterationRaw ? stripHtml(transliterationRaw) : "",
+      transliteration: latinMap.get(v.verse_number) ?? "",
     }
   })
 }

@@ -40,7 +40,7 @@ export default async function SurahReaderPage({
       verseKey: verses[0].verseKey,
       arabicText: verses[0].arabicText,
       translation: verses[0].translation,
-      transliteration: null,
+      transliteration: verses[0].transliteration || null,
       audioUrl: null,
     })
   }
@@ -121,7 +121,7 @@ export default async function SurahReaderPage({
               {verse.arabicText}
             </p>
             {verse.transliteration && (
-              <p className="text-sm leading-relaxed text-foreground/90">
+              <p className="text-sm leading-relaxed text-primary/80 italic">
                 {verse.transliteration}
               </p>
             )}
