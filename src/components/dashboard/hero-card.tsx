@@ -44,22 +44,11 @@ function timeOfDay(hour: number) {
 
 const PRAYER_ORDER: PrayerName[] = ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"]
 
-// One dark hero panel instead of two stacked ones — greeting and prayer
-// times used to be separate cards with the same background/pattern,
-// which read as accidental repetition rather than one deliberate block.
-export function HeroCard({ name }: { name: string }) {
-  const [now, setNow] = useState<Date | null>(null)
-
-  useEffect(() => {
-    setNow(new Date())
-    const id = setInterval(() => setNow(new Date()), 30_000)
-    return () => clearInterval(id)
-  }, [])
-
-  const Shell = ({ children }: { children: React.ReactNode }) => (
-    // Fixed dark-olive brand panel — deliberately NOT the semantic
-    // --primary/--primary-foreground pair, since those invert in dark
-    // mode (primary becomes the light accent) and would wash this out.
+// Fixed dark-olive brand panel — deliberately NOT the semantic
+// --primary/--primary-foreground pair, since those invert in dark
+// mode (primary becomes the light accent) and would wash this out.
+function Shell({ children }: { children: React.ReactNode }) {
+  return (
     <section className="animate-fade-up relative overflow-hidden rounded-3xl bg-[linear-gradient(150deg,#3f572f,#182410_100%)] px-5 py-6 text-[#f9f8f1] shadow-lg shadow-black/25 sm:px-7 sm:py-7">
       <svg
         className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.09]"
@@ -95,6 +84,20 @@ export function HeroCard({ name }: { name: string }) {
       <div className="relative grid gap-5">{children}</div>
     </section>
   )
+}
+
+// One dark hero panel instead of two stacked ones — greeting and prayer
+// times used to be separate cards with the same background/pattern,
+// which read as accidental repetition rather than one deliberate block.
+export function HeroCard({ name }: { name: string }) {
+  const [now, setNow] = useState<Date | null>(null)
+
+  useEffect(() => {
+    const tick = () => setNow(new Date())
+    tick()
+    const id = setInterval(tick, 30_000)
+    return () => clearInterval(id)
+  }, [])
 
   // Skeleton height-matched placeholder until mounted — avoids an
   // SSR/client mismatch on the live clock and countdown.

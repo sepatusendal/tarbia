@@ -31,7 +31,8 @@ export function AnimatedCounter({
     // stays stuck showing "Rp 0" indefinitely. Skip the animation and
     // show the real value immediately when the page isn't visible.
     if (document.visibilityState !== "visible") {
-      setDisplay(value)
+      const syncToFinalValue = () => setDisplay(value)
+      syncToFinalValue()
       return
     }
 
@@ -45,7 +46,6 @@ export function AnimatedCounter({
       if (progress < 1) frame = requestAnimationFrame(tick)
     }
 
-    setDisplay(0)
     frame = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(frame)
   }, [value, duration])
