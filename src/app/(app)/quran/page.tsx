@@ -12,6 +12,15 @@ import { ContinueReadingCard } from "@/components/quran/continue-reading-card"
 const VERSE_KEY_PATTERN = /^(\d{1,3})\s*[:.]\s*(\d{1,3})$/
 type View = "surah" | "juz"
 
+// Chapter names carry hyphens/spaces in specific spots ("Ya-Sin",
+// "Ar-Rahman", "An-Nas") that most people don't bother typing when
+// searching ("yasin", "arrahman") — a plain substring match would miss
+// all of those. Stripping everything but letters/digits before comparing
+// makes the separators (and how the user spells around them) not matter.
+function normalizeForSearch(text: string) {
+  return text.toLowerCase().replace(/[^a-z0-9]/g, "")
+}
+
 export default async function QuranSearchPage({
   searchParams,
 }: {
@@ -29,11 +38,12 @@ export default async function QuranSearchPage({
 
   const chapters = await getChapters()
 
+  const normalizedQuery = normalizeForSearch(query)
   const matchingChapters = query
     ? chapters.filter(
         (c) =>
-          c.nameSimple.toLowerCase().includes(query.toLowerCase()) ||
-          c.translatedName.toLowerCase().includes(query.toLowerCase())
+          normalizeForSearch(c.nameSimple).includes(normalizedQuery) ||
+          normalizeForSearch(c.translatedName).includes(normalizedQuery)
       )
     : []
   const verseResults = query ? await searchQuran(query, 10).catch(() => []) : []
