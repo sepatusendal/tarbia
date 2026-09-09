@@ -5,6 +5,7 @@ import { z } from "zod"
 
 import { prisma } from "@/lib/prisma"
 import { requireRole } from "@/lib/auth-helpers"
+import { parseWIBDate } from "@/lib/timezone"
 
 const transactionSchema = z.object({
   type: z.enum(["PEMASUKAN", "PENGELUARAN"]),
@@ -36,7 +37,7 @@ export async function createTransaction(
       kategori: parsed.data.kategori,
       jumlah: parsed.data.jumlah,
       keterangan: parsed.data.keterangan || null,
-      tanggal: new Date(parsed.data.tanggal),
+      tanggal: parseWIBDate(parsed.data.tanggal),
       recordedById: user.id,
     },
   })

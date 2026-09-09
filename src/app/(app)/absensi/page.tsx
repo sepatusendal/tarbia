@@ -4,6 +4,7 @@ import { CalendarPlus, ClipboardCheck } from "lucide-react"
 import { prisma } from "@/lib/prisma"
 import { requireUser } from "@/lib/auth-helpers"
 import { formatTanggal } from "@/lib/format"
+import { startOfWIBToday } from "@/lib/timezone"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -35,12 +36,9 @@ export default async function AbsensiPage({
   const { meetingId } = await searchParams
 
   if (user.role === "ANGGOTA") {
-    const startOfToday = new Date()
-    startOfToday.setHours(0, 0, 0, 0)
-
     const [nextMeeting, history] = await Promise.all([
       prisma.meeting.findFirst({
-        where: { tanggal: { gte: startOfToday } },
+        where: { tanggal: { gte: startOfWIBToday() } },
         orderBy: { tanggal: "asc" },
       }),
       prisma.attendance.findMany({

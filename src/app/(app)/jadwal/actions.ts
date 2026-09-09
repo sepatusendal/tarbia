@@ -6,6 +6,7 @@ import { z } from "zod"
 
 import { prisma } from "@/lib/prisma"
 import { requireRole } from "@/lib/auth-helpers"
+import { parseWIBDate } from "@/lib/timezone"
 import type { PetugasRole } from "@/generated/prisma/enums"
 
 const meetingSchema = z.object({
@@ -34,7 +35,7 @@ export async function createMeeting(
 
   const meeting = await prisma.meeting.create({
     data: {
-      tanggal: new Date(parsed.data.tanggal),
+      tanggal: parseWIBDate(parsed.data.tanggal),
       jam: parsed.data.jam,
       lokasi: parsed.data.lokasi,
       tema: parsed.data.tema,
@@ -62,7 +63,7 @@ export async function updateMeeting(
   await prisma.meeting.update({
     where: { id: meetingId },
     data: {
-      tanggal: new Date(parsed.data.tanggal),
+      tanggal: parseWIBDate(parsed.data.tanggal),
       jam: parsed.data.jam,
       lokasi: parsed.data.lokasi,
       tema: parsed.data.tema,

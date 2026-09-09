@@ -6,8 +6,13 @@ export function formatRupiah(amount: number) {
   }).format(amount)
 }
 
+// timeZone is explicit here (rather than relying on the runtime's local
+// zone) because these render on the server — Vercel's functions default
+// to UTC, which would otherwise show a WIB-midnight-anchored date as the
+// day before.
 export function formatTanggal(date: Date | string) {
   return new Intl.DateTimeFormat("id-ID", {
+    timeZone: "Asia/Jakarta",
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -17,6 +22,7 @@ export function formatTanggal(date: Date | string) {
 
 export function formatTanggalPendek(date: Date | string) {
   return new Intl.DateTimeFormat("id-ID", {
+    timeZone: "Asia/Jakarta",
     day: "numeric",
     month: "short",
     year: "numeric",

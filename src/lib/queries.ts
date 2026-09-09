@@ -3,10 +3,11 @@ import "server-only"
 import { prisma } from "@/lib/prisma"
 import type { PetugasRole } from "@/generated/prisma/enums"
 import { buildBuckets, type Period } from "@/lib/chart-utils"
+import { startOfWIBToday } from "@/lib/timezone"
 
 export async function getNextMeeting() {
   return prisma.meeting.findFirst({
-    where: { tanggal: { gte: new Date() } },
+    where: { tanggal: { gte: startOfWIBToday() } },
     orderBy: { tanggal: "asc" },
     include: { petugas: { include: { member: true } } },
   })
@@ -28,7 +29,7 @@ export async function getSaldoKas() {
 
 export async function getLastMeetingAttendanceSummary() {
   const lastMeeting = await prisma.meeting.findFirst({
-    where: { tanggal: { lt: new Date() } },
+    where: { tanggal: { lt: startOfWIBToday() } },
     orderBy: { tanggal: "desc" },
     include: { attendances: true },
   })
@@ -68,7 +69,7 @@ export async function getUpcomingTasksCount() {
   const roles = ["MC", "PEMATERI", "NOTULEN", "DOKUMENTASI", "KONSUMSI"] as const
 
   const nextMeeting = await prisma.meeting.findFirst({
-    where: { tanggal: { gte: new Date() } },
+    where: { tanggal: { gte: startOfWIBToday() } },
     orderBy: { tanggal: "asc" },
     include: { petugas: true },
   })

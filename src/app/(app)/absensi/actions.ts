@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache"
 
 import { prisma } from "@/lib/prisma"
 import { requireRole, requireUser } from "@/lib/auth-helpers"
+import { startOfWIBToday } from "@/lib/timezone"
 import type { AttendanceStatus } from "@/generated/prisma/enums"
 
 export async function saveAttendance(
@@ -44,9 +45,7 @@ export async function checkInAttendance(meetingId: string) {
   })
   if (!meeting) throw new Error("Jadwal tidak ditemukan.")
 
-  const startOfToday = new Date()
-  startOfToday.setHours(0, 0, 0, 0)
-  if (meeting.tanggal < startOfToday) {
+  if (meeting.tanggal < startOfWIBToday()) {
     throw new Error("Pertemuan ini sudah lewat.")
   }
 

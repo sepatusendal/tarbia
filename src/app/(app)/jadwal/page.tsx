@@ -4,6 +4,7 @@ import { Plus, MapPin } from "lucide-react"
 import { prisma } from "@/lib/prisma"
 import { requireUser } from "@/lib/auth-helpers"
 import { formatTanggal } from "@/lib/format"
+import { startOfWIBToday } from "@/lib/timezone"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import {
@@ -16,13 +17,15 @@ import {
 export default async function JadwalPage() {
   const user = await requireUser()
 
+  const todayWIB = startOfWIBToday()
+
   const [upcoming, history] = await Promise.all([
     prisma.meeting.findMany({
-      where: { tanggal: { gte: new Date() } },
+      where: { tanggal: { gte: todayWIB } },
       orderBy: { tanggal: "asc" },
     }),
     prisma.meeting.findMany({
-      where: { tanggal: { lt: new Date() } },
+      where: { tanggal: { lt: todayWIB } },
       orderBy: { tanggal: "desc" },
     }),
   ])
