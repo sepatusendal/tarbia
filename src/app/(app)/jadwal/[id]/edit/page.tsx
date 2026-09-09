@@ -3,6 +3,7 @@ import { notFound } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { requireRole } from "@/lib/auth-helpers"
 import { prisma } from "@/lib/prisma"
+import { toWIBDateInputValue } from "@/lib/timezone"
 import { updateMeeting } from "../../actions"
 import { MeetingForm } from "../../meeting-form"
 
@@ -34,7 +35,7 @@ export default async function EditMeetingPage({
             action={updateWithId}
             submitLabel="Simpan Perubahan"
             defaultValues={{
-              tanggal: meeting.tanggal.toISOString().slice(0, 10),
+              tanggal: toWIBDateInputValue(meeting.tanggal),
               jam: meeting.jam,
               lokasi: meeting.lokasi,
               tema: meeting.tema,

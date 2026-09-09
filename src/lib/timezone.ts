@@ -31,12 +31,18 @@ export function wibDateParts(date: Date = new Date()) {
   return { year: get("year"), month: get("month"), day: get("day") }
 }
 
+// Formats an instant as "YYYY-MM-DD" in WIB — for pre-filling a
+// `<input type="date">` (e.g. an edit form's default value). Deliberately
+// not `date.toISOString().slice(0, 10)`: that reads the UTC calendar
+// date, which is a day behind for any WIB-midnight-anchored timestamp.
+export function toWIBDateInputValue(date: Date): string {
+  const { year, month, day } = wibDateParts(date)
+  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`
+}
+
 // Start of "today" in WIB, as the correct UTC instant — for `gte`/`lt`
 // boundaries so a meeting or transaction dated today stays classified as
 // today for the whole WIB day, regardless of the server's own timezone.
 export function startOfWIBToday(): Date {
-  const { year, month, day } = wibDateParts()
-  return parseWIBDate(
-    `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`
-  )
+  return parseWIBDate(toWIBDateInputValue(new Date()))
 }

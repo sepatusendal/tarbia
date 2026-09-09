@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { toWIBDateInputValue } from "@/lib/timezone"
 import {
   Select,
   SelectContent,
@@ -136,7 +137,7 @@ export function TransactionDialog({ defaultOpen = false }: { defaultOpen?: boole
               id="tanggal"
               name="tanggal"
               type="date"
-              defaultValue={new Date().toISOString().slice(0, 10)}
+              defaultValue={toWIBDateInputValue(new Date())}
               required
             />
             {state.fieldErrors?.tanggal && (
