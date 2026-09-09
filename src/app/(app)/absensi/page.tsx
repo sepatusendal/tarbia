@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { MeetingPicker } from "@/components/shared/meeting-picker"
 import { EmptyState } from "@/components/shared/empty-state"
 import { AttendanceForm } from "./attendance-form"
+import { CheckInCard } from "./check-in-card"
 
 const statusLabel: Record<string, string> = {
   HADIR: "Hadir",
@@ -34,11 +35,27 @@ export default async function AbsensiPage({
   const { meetingId } = await searchParams
 
   if (user.role === "ANGGOTA") {
-    const history = await prisma.attendance.findMany({
-      where: { memberId: user.id },
-      orderBy: { meeting: { tanggal: "desc" } },
-      include: { meeting: true },
-    })
+    const startOfToday = new Date()
+    startOfToday.setHours(0, 0, 0, 0)
+
+    const [nextMeeting, history] = await Promise.all([
+      prisma.meeting.findFirst({
+        where: { tanggal: { gte: startOfToday } },
+        orderBy: { tanggal: "asc" },
+      }),
+      prisma.attendance.findMany({
+        where: { memberId: user.id },
+        orderBy: { meeting: { tanggal: "desc" } },
+        include: { meeting: true },
+      }),
+    ])
+
+    const nextMeetingAttendance = nextMeeting
+      ? (history.find((h) => h.meetingId === nextMeeting.id)?.status ?? null)
+      : null
+    const pastHistory = nextMeeting
+      ? history.filter((h) => h.meetingId !== nextMeeting.id)
+      : history
 
     return (
       <div className="grid gap-6">
@@ -48,13 +65,19 @@ export default async function AbsensiPage({
             Riwayat kehadiran liqo kamu.
           </p>
         </div>
+
+        {nextMeeting && (
+          <CheckInCard meeting={nextMeeting} initialStatus={nextMeetingAttendance} />
+        )}
+
         <div className="grid gap-3">
-          {history.length === 0 && (
+          <h2 className="text-sm font-medium text-muted-foreground">Riwayat</h2>
+          {pastHistory.length === 0 && (
             <p className="text-muted-foreground py-6 text-center">
               Belum ada riwayat absensi.
             </p>
           )}
-          {history.map((entry) => (
+          {pastHistory.map((entry) => (
             <Card key={entry.id}>
               <CardContent className="flex items-center justify-between py-4">
                 <div>
