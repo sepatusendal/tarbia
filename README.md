@@ -92,7 +92,7 @@ Open `http://localhost:3000`, log in with your freshly seeded admin account, and
 
 ## 🛠️ Dev Notes (for future me, who will 100% forget all of this by next week, insyaAllah)
 
-- Shipped with a `.claude/` config in the repo, so yes, this thing was partially vibe-coded with some AI assistance. Zero shame here — even Ustadz pakai kalkulator kok. We move.
+- Yes, this thing was partially vibe-coded with some AI assistance. Zero shame here — even Ustadz pakai kalkulator kok. We move.
 - Prisma + Supabase means: if the schema suddenly explodes, run `npm run db:migrate` first before spiraling into a full rage-quit and questioning your career choices.
 - If auth randomly breaks, there's a 90% chance it's `NEXTAUTH_SECRET` or `NEXTAUTH_URL` being salah somewhere. It's always the env vars. It is ALWAYS the env vars. Tato ini di lengan kalau perlu.
 
