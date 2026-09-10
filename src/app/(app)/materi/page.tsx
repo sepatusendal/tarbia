@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { FileText, PlayCircle, CalendarPlus, BookOpen } from "lucide-react"
+import { CalendarPlus, BookOpen, FileX } from "lucide-react"
 
 import { prisma } from "@/lib/prisma"
 import { requireUser } from "@/lib/auth-helpers"
@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { MeetingPicker } from "@/components/shared/meeting-picker"
 import { EmptyState } from "@/components/shared/empty-state"
 import { MateriForm } from "./materi-form"
+import { MateriViewer } from "./materi-viewer"
 
 export default async function MateriPage({
   searchParams,
@@ -97,50 +98,23 @@ export default async function MateriPage({
               }
             />
           ) : materi ? (
-            <div className="grid gap-4">
-              <div>
-                <p className="text-lg font-medium">{materi.judul}</p>
-                {materi.ringkasan && (
-                  <p className="text-muted-foreground mt-1 text-sm">
-                    {materi.ringkasan}
-                  </p>
-                )}
-              </div>
-              <div className="flex flex-wrap gap-3">
-                {materi.fileUrl && (
-                  <a
-                    href={materi.fileUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-primary flex items-center gap-1.5 text-sm font-medium hover:underline"
-                  >
-                    <FileText className="size-4" />
-                    Buka PDF
-                  </a>
-                )}
-                {materi.videoUrl && (
-                  <a
-                    href={materi.videoUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-primary flex items-center gap-1.5 text-sm font-medium hover:underline"
-                  >
-                    <PlayCircle className="size-4" />
-                    Tonton Video
-                  </a>
-                )}
-              </div>
-              {materi.catatan && (
-                <div>
-                  <p className="text-muted-foreground text-sm">Catatan</p>
-                  <p>{materi.catatan}</p>
-                </div>
-              )}
-            </div>
+            <MateriViewer
+              judul={materi.judul}
+              ringkasan={materi.ringkasan}
+              fileUrl={materi.fileUrl}
+              videoUrl={materi.videoUrl}
+              catatan={materi.catatan}
+            />
           ) : (
-            <p className="text-muted-foreground py-6 text-center">
-              Belum ada materi untuk pertemuan ini.
-            </p>
+            <div className="grid justify-items-center gap-2 py-8 text-center">
+              <span className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
+                <FileX className="size-5" />
+              </span>
+              <p className="font-medium">Belum ada materi</p>
+              <p className="text-sm text-muted-foreground">
+                Materi untuk pertemuan ini belum diunggah pengurus.
+              </p>
+            </div>
           )}
         </CardContent>
       </Card>
