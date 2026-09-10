@@ -24,6 +24,7 @@ import {
   getAttendanceTrend,
   getCashFlowTrend,
   getMeetingActivityTrend,
+  isMeetingToday,
 } from "@/lib/queries"
 import type { Period } from "@/lib/chart-utils"
 import { formatTanggalPendek, formatRupiah } from "@/lib/format"
@@ -33,6 +34,8 @@ import { AnimatedCounter } from "@/components/ui/animated-counter"
 import { CountdownBadge } from "@/components/shared/countdown-badge"
 import { ChartCard } from "@/components/charts/chart-card"
 import { HeroCard } from "@/components/dashboard/hero-card"
+import { LiveMeetingCard } from "@/components/dashboard/live-meeting-card"
+import { WelcomeBanner } from "@/components/dashboard/welcome-banner"
 import { QuickAccessGrid } from "@/components/dashboard/quick-access-grid"
 import { LoadingSpinner } from "@/components/shared/loading-spinner"
 import { TodaysReflectionCard } from "@/components/quran/todays-reflection-card"
@@ -91,6 +94,8 @@ export default async function DashboardPage() {
       />
       <HeroCard name={firstName} />
 
+      <WelcomeBanner name={firstName} />
+
       <QuickAccessGrid />
 
       <section
@@ -98,9 +103,11 @@ export default async function DashboardPage() {
         style={{ animationDelay: "60ms" }}
       >
         <p className="mb-2 text-sm font-medium text-muted-foreground">
-          Liqo Berikutnya
+          {nextMeeting && isMeetingToday(nextMeeting.tanggal) ? "Liqo Hari Ini" : "Liqo Berikutnya"}
         </p>
-        {nextMeeting ? (
+        {nextMeeting && isMeetingToday(nextMeeting.tanggal) ? (
+          <LiveMeetingCard meeting={nextMeeting} />
+        ) : nextMeeting ? (
           <Card className="overflow-hidden rounded-3xl border-primary/10 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--primary)_9%,var(--card)),var(--card)_58%)] ring-primary/15">
             <CardContent className="grid gap-5 py-2">
               <div className="flex items-start justify-between gap-3">

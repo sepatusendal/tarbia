@@ -9,8 +9,18 @@ export async function getNextMeeting() {
   return prisma.meeting.findFirst({
     where: { tanggal: { gte: startOfWIBToday() } },
     orderBy: { tanggal: "asc" },
-    include: { petugas: { include: { member: true } } },
+    include: { petugas: { include: { member: true } }, materi: true },
   })
+}
+
+// Is this meeting's date today (WIB)? Used to decide between "Sedang
+// Berlangsung" (today, materi accessible right now) and a plain
+// upcoming-meeting countdown.
+export function isMeetingToday(tanggal: Date) {
+  const startOfToday = startOfWIBToday()
+  const startOfTomorrow = new Date(startOfToday)
+  startOfTomorrow.setUTCDate(startOfTomorrow.getUTCDate() + 1)
+  return tanggal >= startOfToday && tanggal < startOfTomorrow
 }
 
 export async function getSaldoKas() {
